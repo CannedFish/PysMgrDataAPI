@@ -1,0 +1,7 @@
+.venv/*
+docs/*
+initcloud_web_bak/*
+tests/*
+requirements.txt
+*.pyc
+*.swp
