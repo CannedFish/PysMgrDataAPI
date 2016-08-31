@@ -36,6 +36,7 @@ from biz.templatemanager import views as templatemanager_view
 
 from biz.virtualmechine_bar import views as virtualmechine_view
 from biz.service_bar import views as service_bar_view
+from biz.phy_monitor import views as phy_monitor_view
 
 
 
@@ -66,7 +67,7 @@ urlpatterns += [
 
 # phy_monitor
 urlpatterns += [
-    url(r'^phy_monitor/$'),
+    url(r'^phy_monitor/$', phy_monitor_view.PhyMonitorList.as_view()),
 ]
 
 #qos
