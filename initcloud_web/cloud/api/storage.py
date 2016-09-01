@@ -20,7 +20,7 @@ def __get_request(url):
 
 def __post_request(url, data):
     try:
-        r = requests.post(url, data)
+        r = requests.post(url, data=data)
         ret = r.json()
     except Exception, e:
         ret = {
@@ -31,7 +31,7 @@ def __post_request(url, data):
 
 def __put_request(url, data):
     try:
-        r = requests.put(url, data)
+        r = requests.put(url, data=data)
         ret = r.json()
     except Exception, e:
         ret = {
