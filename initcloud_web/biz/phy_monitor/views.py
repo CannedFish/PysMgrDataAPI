@@ -5,7 +5,7 @@ from rest_framework import generics
 
 from biz.common.decorators import require_GET, require_POST
 from biz.common.pagination import PagePagination
-# from biz.phy_monitor.serializer import PhyMonitorSerializer
+from biz.phy_monitor.serializer import PhyMonitorSerializer
 
 import cloud.api.redfish as redfish
 
