@@ -71,7 +71,8 @@ INSTALLED_APPS = [
     'biz.templatemanager',
     'biz.virtualmechine_bar',
     'biz.service_bar',
-    'biz.phy_monitor'
+    'biz.phy_monitor',
+    'biz.storage_monitor'
 ]
 
 MIDDLEWARE_CLASSES = (
