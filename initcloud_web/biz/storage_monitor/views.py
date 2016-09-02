@@ -29,7 +29,7 @@ class StorageNodeList(generics.ListAPIView):
                             'cpu_used': None,
                             'cpu_frequence': None,
                             'memory': {
-                                'memory_used': status['memUsed'],
+                                'memory_used': status['memUsed'] / float(status['memTotal']),
                                 'memory_total': status['memTotal'],
                                 'used': status['memUsed'],
                                 'empty': status['memTotal']-status['memUsed']
@@ -59,22 +59,21 @@ class TreeNodeList(generics.ListAPIView):
         poolstatus = storage.get_pool_status()
         if poolstatus['success']:
             serverlist = storage.get_cluster_alive()
-            queryset = []
             if serverlist['success']:
-                queryset = [\
-                    [{\
-                        'label': pool.id,\
+                queryset = [{\
+                    'label': server['id'],\
+                    'nodelist': [{\
+                        'label': pool['id'],\
                         'data': {\
-                            'status': pool.status,\
-                            'description': pool.type,\
+                            'status': pool['status'],\
+                            'description': pool['type'],\
                         },\
                         'children': [{\
                             'label': disk['name'],\
                             'data': {'status': disk['state']}\
                         } for disk in pool['diskList']]\
-                    } for pool in filter(lambda x: x['serverId']==server['id']\
-                    , poolstatus['data'])] \
-                for server in serverlist['data']]
+                    } for pool in filter(lambda x: x['serverId']==server['id'], poolstatus['data'])]\
+                } for server in serverlist['data']]
             else:
                 LOG.info("Get cluster alive error: %s" % serverlist['error'])
             return queryset

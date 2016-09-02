@@ -3,19 +3,19 @@
 from rest_framework import serializers
 
 # StorageNode
-class MemorySerializer():
-    memory_used = serializers.CharField()
-    memory_total = serializers.CharField()
-    used = serializers.CharField()
-    empty = serializers.CharField()
+class MemorySerializer(serializers.Serializer):
+    memory_used = serializers.FloatField()
+    memory_total = serializers.IntegerField()
+    used = serializers.IntegerField()
+    empty = serializers.IntegerField()
 
-class NetworkCardSerializer():
+class NetworkCardSerializer(serializers.Serializer):
     up = serializers.CharField()
     up_rate = serializers.CharField()
     down = serializers.CharField()
     down_rate = serializers.CharField()
 
-class ItemSerializer():
+class ItemSerializer(serializers.Serializer):
     cpu_used = serializers.ListField(child=serializers.IntegerField())
     cpu_frequence = serializers.ListField(child=serializers.FloatField())
     memory = MemorySerializer()
@@ -26,16 +26,20 @@ class StorageNodeSerializer(serializers.Serializer):
     item = ItemSerializer()
 
 # Treeview
-class DiskSerializer():
+class DiskSerializer(serializers.Serializer):
     label = serializers.CharField()
     data = serializers.DictField()
 
-class TreeNodeDataSerializer():
+class TreeNodeDataSerializer(serializers.Serializer):
     status = serializers.CharField()
     description = serializers.CharField()
 
-class TreeNodeSerializer():
+class NodeListSerializer(serializers.Serializer):
     label = serializers.CharField()
     data = TreeNodeDataSerializer()
-    children = ListField(child=DiskSerializer())
+    children = DiskSerializer(many=True)
+
+class TreeNodeSerializer(serializers.Serializer):
+    label = serializers.CharField()
+    nodelist = NodeListSerializer(many=True)
 
