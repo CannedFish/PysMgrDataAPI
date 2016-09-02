@@ -56,5 +56,29 @@ class TreeNodeList(generics.ListAPIView):
     pagination_class = PagePagination
 
     def get_queryset(self):
-        pass
+        poolstatus = storage.get_pool_status()
+        if poolstatus['success']:
+            serverlist = storage.get_cluster_alive()
+            queryset = []
+            if serverlist['success']:
+                queryset = [\
+                    [{\
+                        'label': pool.id,\
+                        'data': {\
+                            'status': pool.status,\
+                            'description': pool.type,\
+                        },\
+                        'children': [{\
+                            'label': disk['name'],\
+                            'data': {'status': disk['state']}\
+                        } for disk in pool['diskList']]\
+                    } for pool in filter(lambda x: x['serverId']==server['id']\
+                    , poolstatus['data'])] \
+                for server in serverlist['data']]
+            else:
+                LOG.info("Get cluster alive error: %s" % serverlist['error'])
+            return queryset
+        else:
+            LOG.info("Get pool status error: %s" % poolstatus['error'])
+            return []
 
