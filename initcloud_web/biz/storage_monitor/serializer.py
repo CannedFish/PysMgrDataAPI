@@ -16,7 +16,7 @@ class NetworkCardSerializer(serializers.Serializer):
     down_rate = serializers.CharField()
 
 class ItemSerializer(serializers.Serializer):
-    cpu_used = serializers.ListField(child=serializers.IntegerField())
+    cpu_used = serializers.ListField(child=serializers.FloatField())
     cpu_frequence = serializers.ListField(child=serializers.FloatField())
     memory = MemorySerializer()
     network_card = NetworkCardSerializer()

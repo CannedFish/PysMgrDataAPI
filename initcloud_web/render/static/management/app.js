@@ -8,7 +8,7 @@
 'use strict';
 
 function template(name){
-    return "/static/management/views/" + name + ".html";
+    return "../static/management/views/" + name + ".html";
 }
 /* Cloud App */
 var CloudApp = angular.module("CloudApp", [
@@ -22,9 +22,9 @@ var CloudApp = angular.module("CloudApp", [
     "ngBootbox",
     "jm.i18next",
     "ngLodash",
-    "easypiechart",
     "ui.load",
     "ui.jq",
+    "pageutil.jq",
     'abn.tree',
     "cloud.services",
     "cloud.resources",
@@ -37,7 +37,7 @@ CloudApp.config(function ($i18nextProvider) {
         fallbackLng: 'en',
         useCookie: false,
         useLocalStorage: false,
-        resGetPath: '/static/locales/__lng__/__ns__.json'
+        resGetPath: '../static/locales/__lng__/__ns__.json'
     };
 });
 
@@ -118,15 +118,14 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/assets/admin/pages/css/timeline.css',
-                                '/static/assets/global/plugins/jquery-easypiechart/style.css',
-                                // '/static/management/controllers/overview_ctl.js',
-                                '/static/management/controllers/network_bar_ctrl.js',
-                                '/static/management/controllers/service__bar_ctrl.js',
-                                '/static/management/controllers/storage__bar_ctrl.js',
-                                '/static/management/controllers/virtualmechine_bar_ctrl.js',
-                                '/static/management/controllers/phy_nodes_ctrl.js',
-                                '/static/management/controllers/cabinet_ctrl.js'
+                                '../static/assets/admin/pages/css/timeline.css',
+                                '../static/assets/global/plugins/jquery-easypiechart/style.css',
+                                '../static/management/controllers/network_bar_ctrl.js',
+                                '../static/management/controllers/service__bar_ctrl.js',
+                                '../static/management/controllers/storage__bar_ctrl.js',
+                                '../static/management/controllers/virtualmechine_bar_ctrl.js',
+                                '../static/management/controllers/phy_nodes_ctrl.js',
+                                '../static/management/controllers/cabinet_ctrl.js'
                             ]
                         });
                     }],
@@ -140,7 +139,6 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             .state("phy_monitor", {
                 url: "/phy_monitor/",
                 templateUrl: template('phy_monitor'),
-                data: {pageTitle: 'Image'},
                 controller: "Phy_MonitorController",
                 resolve: {
                     deps: ['$ocLazyLoad', function ($ocLazyLoad) {
@@ -148,8 +146,9 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/phy_monitor_ctrl.js',
-                                '/static/management/controllers/roles_ctrl.js'
+                                '../static/management/controllers/phy_monitor_ctrl.js',
+                                '../static/management/controllers/cabinet_ctrl.js',
+                                '../static/management/controllers/phy_monitor_storage_ctrl.js'
                             ]
                         });
                     }]
@@ -167,7 +166,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             files: [
                                 '../static/management/controllers/storage_monitor_ctrl.js',
                                 '../static/assets/global/plugins/tree/abn_tree.css',//引入树形插件
-                                '../static/management/controllers/tree_ctrl.js'
+                                '../static/management/controllers/treeview_ctrl.js'
                             ]
                         });
                     }]
@@ -177,95 +176,102 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             .state("cloud_monitor", {
                 url: "/cloud_monitor/",
                 templateUrl: template('cloud_monitor'),
+                controller:"Cloud_MonitorController",
                 resolve: {
                     deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                         return $ocLazyLoad.load({
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/cloud_monitor_ctrl.js'
+                                '../static/management/controllers/cloud_monitor_ctrl.js',
                             ]
                         });
                     }]
                 }
             })
-
-	     //virtualmechine_bar
-          .state("virtualmechine_bar", {
-                url: "/virtualmechine_bar/",
-                templateUrl: "/static/management/views/virtualmechine_bar.html",
-                data: {pageTitle: 'Virtualmechine_Bar'},
-                controller: "Virtualmechine_BarController",
+            // // 云主机监控-二级
+            .state("cloud_monitor_detail", {
+                url: "/cloud_monitor_detail/",
+                templateUrl: template('cloud_monitor_detail'),
+                controller:"Cloud_Monitor_DetailController",
                 resolve: {
                     deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                         return $ocLazyLoad.load({
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/virtualmechine_bar_ctrl.js'
-                            ]
-                        });
-                    }]
-                }
-            }) 
-
-	    //service__bar
-          .state("service__bar", {
-                url: "/service__bar/",
-                templateUrl: "/static/management/views/service__bar.html",
-                data: {pageTitle: 'Service__Bar'},
-                controller: "Service__BarController",
-                resolve: {
-                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                        return $ocLazyLoad.load({
-                            name: 'CloudApp',
-                            insertBefore: '#ng_load_plugins_before',
-                            files: [
-                                '/static/management/controllers/service__bar_ctrl.js'
+                                '../static/management/controllers/cloud_monitor_detail_ctrl.js',
+                                '../static/assets/global/plugins/footable/footable.all.min.js',//引入插件footable
+                                '../static/assets/global/plugins/footable/footable.core.css',
                             ]
                         });
                     }]
                 }
             })
-     
-
+            //网络监控
+            .state("network_monitor", {
+                url: "/network_monitor/",
+                templateUrl: template('network_monitor'),
+                controller: "Network_MonitorController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '../static/management/controllers/network_monitor_ctrl.js',
+                                '../static/assets/global/plugins/tree/abn_tree.css',//引入树形插件
+                                '../static/management/controllers/network_bar_net_ctrl.js',//网络监控- 网络树
+                                '../static/management/controllers/network_bar_router_ctrl.js',//网络监控-路由器
+                                '../static/management/controllers/network_bar_sdn_ctrl.js',//网络监控-sdn
+                                '../static/management/controllers/network_bar_loadbanlance_ctrl.js',//网络监控-负载均衡
+                            ]
+                        });
+                    }]
+                }
+            })
             // 报警信息
             .state("warning-info", {
                 url: "/warning-info/",
                 templateUrl: template('warning-info'),
+                controller: "WarningController",
                 resolve: {
                     deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                         return $ocLazyLoad.load({
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/assets/admin/layout/css/warning-info.css',
-                                '/static/management/controllers/warning_ctrl.js'
+                                '../static/management/controllers/warning_ctrl.js',
+                                '../static/assets/global/plugins/footable/footable.all.min.js',//引入插件footable
+                                '../static/assets/global/plugins/footable/footable.core.css',
+                                '../static/assets/global/plugins/footable/footable.filter.js',
+
+                               
                             ]
                         });
                     }]
                 }
             })
-            // // 云盘监控
-            // .state("volume_monitor", {
-            //     url: "/volume_monitor/",
-            //     templateUrl: template('volume_monitor'),
-            //     resolve: {
-            //         deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-            //             return $ocLazyLoad.load({
-            //                 name: 'CloudApp',
-            //                 insertBefore: '#ng_load_plugins_before',
-            //                 files: [
-            //                     '/static/management/controllers/roles_ctrl.js'
-            //                 ]
-            //             });
-            //         }]
-            //     }
-            // })
+            // 云盘监控
+            .state("volume_monitor", {
+                url: "/volume_monitor/",
+                templateUrl: template('volume_monitor'),
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '../static/management/controllers/roles_ctrl.js'
+                            ]
+                        });
+                    }]
+                }
+            })
             // // roles 
             // .state("roles", {
             //     url: "/roles/",
-            //     templateUrl: "/static/management/views/roles.html",
+            //     templateUrl: "../static/management/views/roles.html",
             //     data: {pageTitle: 'Role'},
             //     controller: "RoleController",
             //     // resolve: {
@@ -274,7 +280,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             //     //             name: 'CloudApp',
             //     //             insertBefore: '#ng_load_plugins_before',
             //     //             files: [
-            //     //                 '../static/management/controllers/roles_ctrl.js'
+            //     //                 '..../static/management/controllers/roles_ctrl.js'
             //     //             ]
             //     //         });
             //     //     }]
@@ -284,7 +290,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             // // forum
             // .state("forum", {
             //     url: "/support/",
-            //     templateUrl: "/static/management/views/forum.html",
+            //     templateUrl: "../static/management/views/forum.html",
             //     data: {pageTitle: 'Forum'},
             //     controller: "ForumController",
             //     resolve: {
@@ -293,7 +299,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             //                 name: 'CloudApp',
             //                 insertBefore: '#ng_load_plugins_before',
             //                 files: [
-            //                     '/static/management/controllers/forum_ctrl.js'
+            //                     '../static/management/controllers/forum_ctrl.js'
             //                 ]
             //             });
             //         }]
@@ -302,7 +308,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             // // operation
             // .state("operation", {
             //     url: "/operation/",
-            //     templateUrl: "/static/management/views/operation.html",
+            //     templateUrl: "../static/management/views/operation.html",
             //     data: {pageTitle: 'Operation'},
             //     controller: "OperationController",
             //     resolve: {
@@ -311,9 +317,9 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             //                 name: 'CloudApp',
             //                 insertBefore: '#ng_load_plugins_before',
             //                 files: [
-            //                     '/static/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css',
-            //                     '/static/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
-            //                     '/static/management/controllers/operation_ctl.js'
+            //                     '../static/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css',
+            //                     '../static/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
+            //                     '../static/management/controllers/operation_ctl.js'
             //                 ]
             //             });
             //         }]
@@ -323,7 +329,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             // // user
             // .state("user", {
             //     url: "/users/",
-            //     templateUrl: "/static/management/views/user.html",
+            //     templateUrl: "../static/management/views/user.html",
             //     data: {pageTitle: 'User'},
             //     controller: "UserController",
             //     resolve: {
@@ -332,7 +338,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             //                 name: 'CloudApp',
             //                 insertBefore: '#ng_load_plugins_before',
             //                 files: [
-            //                     '/static/management/controllers/user_ctrl.js'
+            //                     '../static/management/controllers/user_ctrl.js'
             //                 ]
             //             });
             //         }]
@@ -342,7 +348,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
 
             // .state("UserGrouper", {
             //     url: "/UserGrouper/",
-            //     templateUrl: "/static/management/views/UserGrouper.html",
+            //     templateUrl: "../static/management/views/UserGrouper.html",
             //     data: {pageTitle: 'Usergrouper'},
             //     controller: "UsergrouperController",
             //     resolve: {
@@ -351,7 +357,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             //                 name: 'CloudApp',
             //                 insertBefore: '#ng_load_plugins_before',
             //                 files: [
-            //                     '/static/management/controllers/UserGrouper_ctrl.js'
+            //                     '../static/management/controllers/UserGrouper_ctrl.js'
             //                 ]
             //             });
             //         }]
@@ -373,7 +379,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
 
-                                '/static/management/controllers/roles_ctrl.js'
+                                '../static/management/controllers/roles_ctrl.js'
                             ]
                         });
                     }]
@@ -383,7 +389,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
           //policy_cinder
           .state("policy_cinder", {
                 url: "/policy_cinder/",
-                templateUrl: "/static/management/views/policy_cinder.html",
+                templateUrl: "../static/management/views/policy_cinder.html",
                 data: {pageTitle: 'Policy_Cinder'},
                 controller: "Policy_CinderController",
                 resolve: {
@@ -392,7 +398,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/policy_cinder_ctrl.js'
+                                '../static/management/controllers/policy_cinder_ctrl.js'
                             ]
                         });
                     }]
@@ -402,7 +408,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
           //policy_neutron
           .state("policy_neutron", {
                 url: "/policy_neutron/",
-                templateUrl: "/static/management/views/policy_neutron.html",
+                templateUrl: "../static/management/views/policy_neutron.html",
                 data: {pageTitle: 'Policy_Neutron'},
                 controller: "Policy_NeutronController",
                 resolve: {
@@ -411,7 +417,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/policy_neutron_ctrl.js'
+                                '../static/management/controllers/policy_neutron_ctrl.js'
                             ]
                         });
                     }]
@@ -423,7 +429,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
           //policy_nova
           .state("policy_nova", {
                 url: "/policy_nova/",
-                templateUrl: "/static/management/views/policy_nova.html",
+                templateUrl: "../static/management/views/policy_nova.html",
                 data: {pageTitle: 'Policy_Nova'},
                 controller: "Policy_NovaController",
                 resolve: {
@@ -432,7 +438,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/policy_nova_ctrl.js'
+                                '../static/management/controllers/policy_nova_ctrl.js'
                             ]
                         });
                     }]
@@ -442,7 +448,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
           //group
           .state("group", {
                 url: "/group/",
-                templateUrl: "/static/management/views/group.html",
+                templateUrl: "../static/management/views/group.html",
                 data: {pageTitle: 'Group'},
                 controller: "GroupController",
                 resolve: {
@@ -451,7 +457,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/group_ctrl.js'
+                                '../static/management/controllers/group_ctrl.js'
                             ]
                         });
                     }]
@@ -463,7 +469,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             // user
             .state("notifications", {
                 url: "/notifications/",
-                templateUrl: "/static/management/views/notification.html",
+                templateUrl: "../static/management/views/notification.html",
                 data: {pageTitle: 'Notification'},
                 controller: "NotificationController",
                 resolve: {
@@ -472,7 +478,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/notification_ctrl.js'
+                                '../static/management/controllers/notification_ctrl.js'
                             ]
                         });
                     }]
@@ -482,7 +488,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             // workflow
             .state("workflow", {
                 url: "/workflow/",
-                templateUrl: "/static/management/views/workflow.html",
+                templateUrl: "../static/management/views/workflow.html",
                 data: {pageTitle: 'Workflow Definition'},
                 controller: "WorkflowManagementController",
                 resolve: {
@@ -491,7 +497,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/workflow_ctrl.js'
+                                '../static/management/controllers/workflow_ctrl.js'
                             ]
                         });
                     }]
@@ -500,7 +506,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
 
             .state("price_rule", {
                 url: "/price_rule/",
-                templateUrl: "/static/management/views/price_rule.html",
+                templateUrl: "../static/management/views/price_rule.html",
                 data: {pageTitle: 'Price Rule'},
                 resolve: {
                     deps: ['$ocLazyLoad', function ($ocLazyLoad) {
@@ -508,7 +514,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/price_rule_ctrl.js'
+                                '../static/management/controllers/price_rule_ctrl.js'
                             ]
                         });
                     }]
@@ -517,12 +523,10 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
     }]);
 
 /* Init global settings and run the app */
-CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval", "current_user", "site_config",
-    function ($rootScope, settings, $state, $http, $cookies, $interval, current_user, site_config) {
+CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval",
+    function ($rootScope, settings, $state, $http, $cookies, $interval) {
         $http.defaults.headers.common['X-CSRFToken'] = $cookies['csrftoken'];
         $rootScope.$state = $state;
-        $rootScope.current_user = current_user;
-        $rootScope.site_config = site_config;
         var callbacks = [];
 
         $rootScope.executeWhenLeave = function(callback){

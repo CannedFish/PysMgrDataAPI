@@ -23,25 +23,47 @@ class StorageNodeList(generics.ListAPIView):
                 serverstatus = storage.get_server_status(server['id'])
                 if serverstatus['success']:
                     status = serverstatus['data']
-                    query = {
-                        'name': server['hostname'],
-                        'item': {
-                            'cpu_used': None,
-                            'cpu_frequence': None,
-                            'memory': {
-                                'memory_used': status['memUsed'] / float(status['memTotal']),
-                                'memory_total': status['memTotal'],
-                                'used': status['memUsed'],
-                                'empty': status['memTotal']-status['memUsed']
-                            },
-                            'network_card': {
-                                'up': None,
-                                'up_rate': None,
-                                'down': None,
-                                'down_rate': None
+                    if status['status'] != 'offline':
+                        query = {
+                            'name': server['hostname'],
+                            'item': {
+                                'cpu_used': [float(status['cpu'])*100],
+                                'cpu_frequence': [float(status['cpuClock'][0:-3])],
+                                'memory': {
+                                    'memory_used': (status['memUsed']/float(status['memTotal'])) \
+                                            if status['memTotal']!=0 else 0,
+                                    'memory_total': status['memTotal'],
+                                    'used': status['memUsed'],
+                                    'empty': status['memTotal']-status['memUsed']
+                                },
+                                'network_card': {
+                                    'up': 0,
+                                    'up_rate': status['netIntfStatus'][0]['txRate'],
+                                    'down': 0,
+                                    'down_rate': status['netIntfStatus'][0]['rxRate']
+                                }
                             }
                         }
-                    }
+                    else:
+                        query = {
+                            'name': server['hostname'],
+                            'item': {
+                                'cpu_used': [0],
+                                'cpu_frequence': [0],
+                                'memory': {
+                                    'memory_used': 0,
+                                    'memory_total': 0,
+                                    'used': 0,
+                                    'empty': 0 
+                                },
+                                'network_card': {
+                                    'up': 0,
+                                    'up_rate': 0,
+                                    'down': 0,
+                                    'down_rate': 0
+                                }
+                            }
+                        }
                     queryset.append(query)
                 else:
                     LOG.info("Get %s status error: %s" % \
@@ -66,7 +88,7 @@ class TreeNodeList(generics.ListAPIView):
                         'label': pool['id'],\
                         'data': {\
                             'status': pool['status'],\
-                            'description': pool['type'],\
+                            'description': pool['description'],\
                         },\
                         'children': [{\
                             'label': disk['name'],\
