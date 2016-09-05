@@ -74,6 +74,8 @@ urlpatterns += [
 urlpatterns += [
     url(r'^storage_monitor/$', storage_monitor_view.StorageNodeList.as_view()),
     url(r'^treeview/$', storage_monitor_view.TreeNodeList.as_view()),
+    url(r'^storage_bar/$', storage_monitor_view.StorageBarDetail.as_view()),
+    url(r'^phy_nodes/$', storage_monitor_view.PhyNodesList.as_view()),
 ]
 
 #qos

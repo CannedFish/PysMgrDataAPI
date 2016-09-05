@@ -62,6 +62,10 @@ def get_cluster_warnings():
     return __get_request(url)
 
 # disk
+def get_disk_list():
+    url = settings.STORAGE_URL[0] + '/disk/list'
+    return __get_request(url)
+
 def get_jbod_list():
     url = settings.STORAGE_URL[0] + '/jbod/list'
     return __get_request(url)
@@ -88,6 +92,10 @@ def get_server_log(sid):
     return __get_request(url)
 
 # pool
+def get_pool_list():
+    url = settings.STORAGE_URL[0] + '/pool/list'
+    return __get_request(url)
+
 def get_pool_status():
     url = settings.STORAGE_URL[0] + '/pool/status'
     return __get_request(url)

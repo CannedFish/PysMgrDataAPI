@@ -3,7 +3,7 @@
 from django.contrib.auth.models import AnonymousUser, User
 from django.test import TestCase, RequestFactory
 
-from .views import StorageNodeList, TreeNodeList
+from .views import StorageNodeList, TreeNodeList, StorageBarDetail, PhyNodesList
 import json
 
 class SimpleTest(TestCase):
@@ -24,6 +24,22 @@ class SimpleTest(TestCase):
         req = self.factory.get('/api/treenode/')
         req.user = self.user
         res = TreeNodeList.as_view()(req)
+        self.assertEqual(res.status_code, 200)
+        res.render()
+        print '\n', res.content
+
+    def test_storage_bar(self):
+        req = self.factory.get('/api/storage__bar/')
+        req.user = self.user
+        res = StorageBarDetail.as_view()(req)
+        self.assertEqual(res.status_code, 200)
+        res.render()
+        print '\n', res.content
+
+    def test_phy_nodes(self):
+        req = self.factory.get('/api/phy_nodes/')
+        req.user = self.user
+        res = PhyNodesList.as_view()(req)
         self.assertEqual(res.status_code, 200)
         res.render()
         print '\n', res.content

@@ -43,3 +43,17 @@ class TreeNodeSerializer(serializers.Serializer):
     label = serializers.CharField()
     nodelist = NodeListSerializer(many=True)
 
+# StorageBar
+class StorageBarSerializer(serializers.Serializer):
+    disk = serializers.ListField(child=serializers.IntegerField())
+    SSD = serializers.ListField(child=serializers.IntegerField())
+    NVMe = serializers.ListField(child=serializers.IntegerField())
+    SAS = serializers.ListField(child=serializers.IntegerField())
+
+# PhyNodes
+class PhyNodesSerializer(serializers.Serializer):
+    cpuUsed = serializers.FloatField()
+    memUsed = serializers.FloatField()
+    rx = serializers.FloatField()
+    tx = serializers.FloatField()
+

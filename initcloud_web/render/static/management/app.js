@@ -24,7 +24,7 @@ var CloudApp = angular.module("CloudApp", [
     "ngLodash",
     "ui.load",
     "ui.jq",
-    "pageutil.jq",
+    // "pageutil.jq",
     'abn.tree',
     "cloud.services",
     "cloud.resources",
@@ -521,12 +521,13 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                 }
             });
     }]);
-
 /* Init global settings and run the app */
-CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval",
-    function ($rootScope, settings, $state, $http, $cookies, $interval) {
+CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval", "current_user", "site_config",
+    function ($rootScope, settings, $state, $http, $cookies, $interval, current_user, site_config) {
         $http.defaults.headers.common['X-CSRFToken'] = $cookies['csrftoken'];
         $rootScope.$state = $state;
+        $rootScope.current_user = current_user;
+        $rootScope.site_config = site_config;
         var callbacks = [];
 
         $rootScope.executeWhenLeave = function(callback){
